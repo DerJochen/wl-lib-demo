@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings
+/target
+
+/*/target
+
+/src/test/resources/real.properties
