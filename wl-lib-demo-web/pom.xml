@@ -10,7 +10,7 @@
 
 	<parent>
 		<groupId>de.jochor.wunderlist</groupId>
-		<artifactId>wl-lib-demo-app</artifactId>
+		<artifactId>wl-lib-demo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -26,20 +26,6 @@
 		<dependency>
 			<groupId>de.jochor.wunderlist</groupId>
 			<artifactId>java-lib-for-wunderlist</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>de.jochor.lib.http</groupId>
-			<!-- <artifactId>http4j-apache</artifactId> -->
-			<artifactId>http4j-junit</artifactId>
-			<version>${version.http4j-apache}</version>
-			<!-- Type T -->
-		</dependency>
-		<dependency>
-			<groupId>de.jochor.lib.json</groupId>
-			<artifactId>json4j-jackson</artifactId>
-			<version>${version.json4j-jackson}</version>
-			<!-- Type T -->
 		</dependency>
 
 		<!-- Get the dependencies of a secured web application -->
@@ -53,20 +39,36 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<!-- Type T -->
 		</dependency>
-
-		<!-- Test dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<!-- Type T -->
-		</dependency>
 		
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 			<!-- Type 0 -->
+		</dependency>
+
+		<!-- Test dependencies -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<!-- Type T -->
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>de.jochor.lib.http</groupId>
+			<artifactId>http4j-junit</artifactId>
+			<version>${version.http4j-junit}</version>
+			<!-- Type T -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.jochor.lib.json</groupId>
+			<artifactId>json4j-jackson</artifactId>
+			<version>${version.json4j-jackson}</version>
+			<!-- Type T -->
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

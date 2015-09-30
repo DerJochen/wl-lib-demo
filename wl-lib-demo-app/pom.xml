@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>wl-lib-demo-app</artifactId>
+
+	<name>Demo App</name>
+	<description>Demo project for Wunderlist with Spring Boot</description>
+
+	<parent>
+		<groupId>de.jochor.wunderlist</groupId>
+		<artifactId>wl-lib-demo</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<version.http4j-apache>0.0.1-SNAPSHOT</version.http4j-apache>
+		<version.json4j-jackson>0.1.1-SNAPSHOT</version.json4j-jackson>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.jochor.wunderlist</groupId>
+			<artifactId>wl-lib-demo-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>de.jochor.lib.http</groupId>
+			<artifactId>http4j-apache</artifactId>
+			<version>${version.http4j-apache}</version>
+			<!-- Type T -->
+		</dependency>
+		<dependency>
+			<groupId>de.jochor.lib.json</groupId>
+			<artifactId>json4j-jackson</artifactId>
+			<version>${version.json4j-jackson}</version>
+			<!-- Type T -->
+		</dependency>
+	</dependencies>
+
+</project>
