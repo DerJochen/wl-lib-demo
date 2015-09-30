@@ -20,6 +20,7 @@
 
 	<properties>
 		<version.spring.boot>1.2.6.RELEASE</version.spring.boot>
+		<version.http4j-apache>0.0.1-SNAPSHOT</version.http4j-apache>
 		<version.json4j-jackson>0.1.1-SNAPSHOT</version.json4j-jackson>
 
 		<java.version>1.8</java.version>
@@ -30,6 +31,13 @@
 			<groupId>de.jochor.wunderlist</groupId>
 			<artifactId>java-lib-for-wunderlist</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.jochor.lib.http</groupId>
+			<!-- <artifactId>http4j-apache</artifactId> -->
+			<artifactId>http4j-junit</artifactId>
+			<version>${version.http4j-apache}</version>
+			<!-- Type T -->
 		</dependency>
 		<dependency>
 			<groupId>de.jochor.lib.json</groupId>
@@ -56,6 +64,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 			<!-- Type T -->
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+			<!-- Type 0 -->
 		</dependency>
 	</dependencies>
 
