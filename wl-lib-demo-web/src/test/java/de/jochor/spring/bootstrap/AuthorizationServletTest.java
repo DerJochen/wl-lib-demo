@@ -11,13 +11,25 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.Properties;
 
+import javax.inject.Inject;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import de.jochor.lib.http4j.junit.HTTPClientJUnit;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = DemoAppApplication.class)
+@WebAppConfiguration
 public class AuthorizationServletTest {
 
 	private static Principal USER;
@@ -37,6 +49,10 @@ public class AuthorizationServletTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	@Inject
+	private Environment env;
+
+	@Inject
 	private AuthorizationServlet authorizationServlet;
 
 	private Path testHomeDir;
@@ -45,8 +61,6 @@ public class AuthorizationServletTest {
 
 	@Before
 	public void setUp() throws Exception {
-		authorizationServlet = new AuthorizationServlet();
-
 		testHomeDir = Paths.get("target", "test-home");
 		storagePath = testHomeDir.resolve(".wl-lib-demo").resolve("storage.properties");
 		Files.deleteIfExists(storagePath);
@@ -64,7 +78,15 @@ public class AuthorizationServletTest {
 
 	@Test
 	public void testGetAccessToken() {
-		fail("Not yet implemented");
+		String accessToken = "testGetAccessToken";
+		String clientId = env.getProperty("wunderlist.client.id");
+		String clientSecrete = env.getProperty("wunderlist.client.secrete");
+		String code = "code retrieved via OAuth2";
+		HTTPClientJUnit.addResponse("{\"access_token\":\"" + accessToken + "\"}", "clientId=" + clientId, "clientSecrete=" + clientSecrete, "code=" + code);
+
+		String retrievedAccessToken = authorizationServlet.getAccessToken(code);
+
+		Assert.assertEquals(accessToken, retrievedAccessToken);
 	}
 
 	@Test

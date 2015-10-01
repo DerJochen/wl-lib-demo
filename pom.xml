@@ -68,4 +68,12 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<repositories>
+		<!-- Source of the parent pom -->
+		<repository>
+			<id>jochor-public-releases</id>
+			<url>http://maven.jochor.de/content/repositories/public-releases/</url>
+		</repository>
+	</repositories>
+
 </project>

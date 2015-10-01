@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,9 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import de.jochor.lib.wunderlist.service.AuthorizationService;
+import de.jochor.lib.wunderlist.service.AuthorizationServiceImpl;
 
 /**
  *
@@ -28,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @SpringBootApplication
+@ComponentScan({ "de.jochor.spring.bootstrap" })
 @RestController
 public class DemoAppApplication {
 
@@ -55,6 +61,16 @@ public class DemoAppApplication {
 		SpringApplication.run(DemoAppApplication.class, args);
 	}
 
+	@Bean
+	public AuthorizationServlet authorizationServlet() {
+	    return new AuthorizationServlet();
+	}
+
+	@Bean
+	public AuthorizationService authorizationService() {
+	    return new AuthorizationServiceImpl();
+	}
+	
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;
