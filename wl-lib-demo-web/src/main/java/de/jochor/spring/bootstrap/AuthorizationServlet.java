@@ -15,9 +15,11 @@ import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import de.jochor.lib.wunderlist.service.AuthorizationService;
@@ -42,11 +44,14 @@ public class AuthorizationServlet extends HttpServlet {
 	private AuthorizationService authorizationService;
 
 	@RequestMapping("/wunderlist-authorization")
-	public void authorization(HttpServletRequest req, Principal user) {
+	public void authorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
 		HttpSession session = req.getSession(false);
 
-		// TODO check session != null
-		// TODO check 'state' from req and from session are equal
+		String state = req.getParameter("state");
+		if (session == null || state == null || !state.equals(session.getAttribute("state"))) {
+			res.setStatus(HttpStatus.FORBIDDEN.value());
+			return;
+		}
 
 		String code = req.getParameter("code");
 		String accessToken = getAccessToken(code);
@@ -54,10 +59,11 @@ public class AuthorizationServlet extends HttpServlet {
 		try {
 			storeAccessToken(user, accessToken);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return;
 		}
 
-		// TODO redirect to /home.html
+		res.sendRedirect("/home.html");
 	}
 
 	protected String getAccessToken(String code) {

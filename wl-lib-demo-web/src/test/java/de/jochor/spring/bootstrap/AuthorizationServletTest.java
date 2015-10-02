@@ -12,6 +12,8 @@ import java.security.Principal;
 import java.util.Properties;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -72,8 +74,15 @@ public class AuthorizationServletTest {
 	}
 
 	@Test
-	public void testAuthorization() {
+	public void testAuthorization() throws IOException {
+		HttpServletRequest req = null;
+		HttpServletResponse res = null;
+		// TODO
+
 		fail("Not yet implemented");
+		authorizationServlet.authorization(req, res, USER);
+
+		// TODO
 	}
 
 	@Test
