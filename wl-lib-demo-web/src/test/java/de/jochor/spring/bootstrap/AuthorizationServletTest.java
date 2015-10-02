@@ -1,7 +1,5 @@
 package de.jochor.spring.bootstrap;
 
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +12,7 @@ import java.util.Properties;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -22,6 +21,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -75,23 +75,39 @@ public class AuthorizationServletTest {
 
 	@Test
 	public void testAuthorization() throws IOException {
-		HttpServletRequest req = null;
-		HttpServletResponse res = null;
-		// TODO
+		String code = "code retrieved via OAuth2";
+		String state = "unguessable  random string";
 
-		fail("Not yet implemented");
-		authorizationServlet.authorization(req, res, USER);
+		HttpSession session = Mockito.mock(HttpSession.class);
+		Mockito.when(session.getAttribute("state")).thenReturn(state);
 
-		// TODO
+		HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(req.getSession(false)).thenReturn(session);
+		Mockito.when(req.getParameter("state")).thenReturn(state);
+		Mockito.when(req.getParameter("code")).thenReturn(code);
+
+		HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+
+		String accessToken = "testGetAccessToken";
+		setUpGetAccessToken(code, accessToken);
+
+		String homeDir = System.getProperty("user.home");
+		System.setProperty("user.home", testHomeDir.toString());
+		try {
+			authorizationServlet.authorization(req, res, USER);
+		} finally {
+			System.setProperty("user.home", homeDir);
+		}
+
+		Mockito.verify(res).sendRedirect("/home.html");
+		verifyAccessTokenIsStored(USER, accessToken);
 	}
 
 	@Test
 	public void testGetAccessToken() {
-		String accessToken = "testGetAccessToken";
-		String clientId = env.getProperty("wunderlist.client.id");
-		String clientSecrete = env.getProperty("wunderlist.client.secrete");
 		String code = "code retrieved via OAuth2";
-		HTTPClientJUnit.addResponse("{\"access_token\":\"" + accessToken + "\"}", "clientId=" + clientId, "clientSecrete=" + clientSecrete, "code=" + code);
+		String accessToken = "testGetAccessToken";
+		setUpGetAccessToken(code, accessToken);
 
 		String retrievedAccessToken = authorizationServlet.getAccessToken(code);
 
@@ -110,12 +126,7 @@ public class AuthorizationServletTest {
 			System.setProperty("user.home", homeDir);
 		}
 
-		Properties properties = new Properties();
-		try (Reader storageReader = Files.newBufferedReader(storagePath, StandardCharsets.UTF_8)) {
-			properties.load(storageReader);
-		}
-
-		Assert.assertEquals(accessToken, properties.get("user.TestUser.accessToken"));
+		verifyAccessTokenIsStored(USER, accessToken);
 	}
 
 	@Test
@@ -132,12 +143,7 @@ public class AuthorizationServletTest {
 			System.setProperty("user.home", homeDir);
 		}
 
-		Properties properties = new Properties();
-		try (Reader storageReader = Files.newBufferedReader(storagePath, StandardCharsets.UTF_8)) {
-			properties.load(storageReader);
-		}
-
-		Assert.assertEquals(accessToken2, properties.get("user.TestUser.accessToken"));
+		verifyAccessTokenIsStored(USER, accessToken2);
 	}
 
 	@Test
@@ -162,13 +168,23 @@ public class AuthorizationServletTest {
 			System.setProperty("user.home", homeDir);
 		}
 
+		verifyAccessTokenIsStored(USER, accessToken);
+		verifyAccessTokenIsStored(user2, accessToken2);
+	}
+
+	private void setUpGetAccessToken(String code, String accessToken) {
+		String clientId = env.getProperty("wunderlist.client.id");
+		String clientSecrete = env.getProperty("wunderlist.client.secrete");
+		HTTPClientJUnit.addResponse("{\"access_token\":\"" + accessToken + "\"}", "clientId=" + clientId, "clientSecrete=" + clientSecrete, "code=" + code);
+	}
+
+	private void verifyAccessTokenIsStored(Principal user, String accessToken) throws IOException {
 		Properties properties = new Properties();
 		try (Reader storageReader = Files.newBufferedReader(storagePath, StandardCharsets.UTF_8)) {
 			properties.load(storageReader);
 		}
 
-		Assert.assertEquals(accessToken, properties.get("user.TestUser.accessToken"));
-		Assert.assertEquals(accessToken2, properties.get("user.TestUser2.accessToken"));
+		Assert.assertEquals(accessToken, properties.get("user." + user.getName() + ".accessToken"));
 	}
 
 }
