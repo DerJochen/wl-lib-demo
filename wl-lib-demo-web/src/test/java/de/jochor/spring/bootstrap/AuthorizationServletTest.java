@@ -71,7 +71,7 @@ public class AuthorizationServletTest {
 	@Test
 	public void testAuthorization() throws IOException {
 		String code = "code retrieved via OAuth2";
-		String state = "unguessable  random string";
+		String state = "unguessable random string";
 
 		HttpSession session = Mockito.mock(HttpSession.class);
 		Mockito.when(session.getAttribute("state")).thenReturn(state);
@@ -94,7 +94,11 @@ public class AuthorizationServletTest {
 			System.setProperty("user.home", homeDir);
 		}
 
-		Mockito.verify(res).sendRedirect("/home.html");
+		String successRedirectAddress = env.getProperty("app.wunderlist.auth.success.redirect");
+		Assert.assertNotNull(successRedirectAddress);
+		Assert.assertFalse(successRedirectAddress.isEmpty());
+
+		Mockito.verify(res).sendRedirect(successRedirectAddress);
 		verifyAccessTokenIsStored(USER, accessToken);
 	}
 

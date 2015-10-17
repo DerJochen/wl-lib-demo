@@ -63,7 +63,8 @@ public class AuthorizationServlet extends HttpServlet {
 			return;
 		}
 
-		res.sendRedirect("/home.html");
+		String successRedirectAddress = env.getProperty("app.wunderlist.auth.success.redirect");
+		res.sendRedirect(successRedirectAddress);
 	}
 
 	protected String getAccessToken(String code) {
