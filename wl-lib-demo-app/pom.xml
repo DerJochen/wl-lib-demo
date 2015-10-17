@@ -15,8 +15,8 @@
 	</parent>
 
 	<properties>
-		<version.http4j-apache>0.0.1-SNAPSHOT</version.http4j-apache>
-		<version.json4j-jackson>0.1.1-SNAPSHOT</version.json4j-jackson>
+		<version.http4j-apache>0.1.0</version.http4j-apache>
+		<version.json4j-jackson>0.2.1</version.json4j-jackson>
 	</properties>
 
 	<dependencies>
