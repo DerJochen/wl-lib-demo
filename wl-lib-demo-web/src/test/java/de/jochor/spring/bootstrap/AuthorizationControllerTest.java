@@ -31,7 +31,7 @@ import de.jochor.lib.http4j.junit.HTTPClientJUnit;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DemoAppApplication.class)
 @WebAppConfiguration
-public class AuthorizationServletTest {
+public class AuthorizationControllerTest {
 
 	private static Principal USER;
 
@@ -50,7 +50,7 @@ public class AuthorizationServletTest {
 	private Environment env;
 
 	@Inject
-	private AuthorizationServlet authorizationServlet;
+	private AuthorizationController authorizationController;
 
 	private Path testHomeDir;
 
@@ -89,7 +89,7 @@ public class AuthorizationServletTest {
 		String homeDir = System.getProperty("user.home");
 		System.setProperty("user.home", testHomeDir.toString());
 		try {
-			authorizationServlet.authorization(req, res, USER);
+			authorizationController.authorization(req, res, USER);
 		} finally {
 			System.setProperty("user.home", homeDir);
 		}
@@ -108,7 +108,7 @@ public class AuthorizationServletTest {
 		String accessToken = "testGetAccessToken";
 		setUpGetAccessToken(code, accessToken);
 
-		String retrievedAccessToken = authorizationServlet.getAccessToken(code);
+		String retrievedAccessToken = authorizationController.getAccessToken(code);
 
 		Assert.assertEquals(accessToken, retrievedAccessToken);
 	}
@@ -120,7 +120,7 @@ public class AuthorizationServletTest {
 		String homeDir = System.getProperty("user.home");
 		System.setProperty("user.home", testHomeDir.toString());
 		try {
-			authorizationServlet.storeAccessToken(USER, accessToken);
+			authorizationController.storeAccessToken(USER, accessToken);
 		} finally {
 			System.setProperty("user.home", homeDir);
 		}
@@ -136,8 +136,8 @@ public class AuthorizationServletTest {
 		String homeDir = System.getProperty("user.home");
 		System.setProperty("user.home", testHomeDir.toString());
 		try {
-			authorizationServlet.storeAccessToken(USER, accessToken);
-			authorizationServlet.storeAccessToken(USER, accessToken2);
+			authorizationController.storeAccessToken(USER, accessToken);
+			authorizationController.storeAccessToken(USER, accessToken2);
 		} finally {
 			System.setProperty("user.home", homeDir);
 		}
@@ -161,8 +161,8 @@ public class AuthorizationServletTest {
 		String homeDir = System.getProperty("user.home");
 		System.setProperty("user.home", testHomeDir.toString());
 		try {
-			authorizationServlet.storeAccessToken(USER, accessToken);
-			authorizationServlet.storeAccessToken(user2, accessToken2);
+			authorizationController.storeAccessToken(USER, accessToken);
+			authorizationController.storeAccessToken(user2, accessToken2);
 		} finally {
 			System.setProperty("user.home", homeDir);
 		}

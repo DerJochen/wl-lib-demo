@@ -44,10 +44,10 @@ public class DemoAppApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.httpBasic().and() //
-			.authorizeRequests().antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll() //
-			.anyRequest().authenticated().and() //
-			.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class) //
-			.csrf().csrfTokenRepository(csrfTokenRepository());
+					.authorizeRequests().antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll() //
+					.anyRequest().authenticated().and() //
+					.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class) //
+					.csrf().csrfTokenRepository(csrfTokenRepository());
 		}
 
 		private CsrfTokenRepository csrfTokenRepository() {
@@ -62,15 +62,15 @@ public class DemoAppApplication {
 	}
 
 	@Bean
-	public AuthorizationServlet authorizationServlet() {
-	    return new AuthorizationServlet();
+	public AuthorizationController authorizationController() {
+		return new AuthorizationController();
 	}
 
 	@Bean
 	public AuthorizationService authorizationService() {
-	    return new AuthorizationServiceImpl();
+		return new AuthorizationServiceImpl();
 	}
-	
+
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;

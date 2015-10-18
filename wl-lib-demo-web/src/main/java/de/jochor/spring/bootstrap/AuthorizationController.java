@@ -12,8 +12,6 @@ import java.security.Principal;
 import java.util.Properties;
 
 import javax.inject.Inject;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,21 +19,21 @@ import javax.servlet.http.HttpSession;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import de.jochor.lib.wunderlist.service.AuthorizationService;
 
 /**
  *
  * <p>
- * <b>Started:</b> 2015-09-05
+ * <b>Started:</b> 2015-10-18
  * </p>
  *
  * @author Jochen Hormes
  */
-@WebServlet("/api/authorization")
-public class AuthorizationServlet extends HttpServlet {
-
-	private static final long serialVersionUID = -2023592494497037249L;
+@RestController
+public class AuthorizationController {
 
 	@Inject
 	private Environment env;
@@ -43,7 +41,7 @@ public class AuthorizationServlet extends HttpServlet {
 	@Inject
 	private AuthorizationService authorizationService;
 
-	@RequestMapping("/wunderlist-authorization")
+	@RequestMapping(value = "/api/wunderlist-authorization", method = RequestMethod.GET)
 	public void authorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
 		HttpSession session = req.getSession(false);
 
