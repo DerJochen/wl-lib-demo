@@ -42,13 +42,16 @@ public class AuthorizationController {
 	@Inject
 	private AuthorizationService authorizationService;
 
-	@RequestMapping(value = "/api/wunderlist-authorization", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/request-authorization", method = RequestMethod.GET)
 	public void requestAuthorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
 		String state = UUID.randomUUID().toString();
 		HttpSession session = req.getSession();
 		session.setAttribute("state", state);
 
-		// TODO implement
+		String clientId = env.getProperty("wunderlist.client.id");
+		String callbackURL = env.getProperty("url.base") + env.getProperty("url.auth.wl.callback");
+		String authorisationRequestURL = authorizationService.buildAuthorisationRequestURL(clientId, callbackURL, state);
+		res.sendRedirect(authorisationRequestURL);
 	}
 
 	@RequestMapping(value = "/api/wunderlist-authorization", method = RequestMethod.GET)
@@ -71,7 +74,7 @@ public class AuthorizationController {
 			return;
 		}
 
-		String successRedirectAddress = env.getProperty("app.wunderlist.auth.success.redirect");
+		String successRedirectAddress = env.getProperty("url.home");
 		res.sendRedirect(successRedirectAddress);
 	}
 
