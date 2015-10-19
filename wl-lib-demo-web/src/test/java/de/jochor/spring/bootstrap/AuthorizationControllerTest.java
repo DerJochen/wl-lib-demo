@@ -89,7 +89,7 @@ public class AuthorizationControllerTest {
 		String homeDir = System.getProperty("user.home");
 		System.setProperty("user.home", testHomeDir.toString());
 		try {
-			authorizationController.authorization(req, res, USER);
+			authorizationController.wunderlistAuthorization(req, res, USER);
 		} finally {
 			System.setProperty("user.home", homeDir);
 		}

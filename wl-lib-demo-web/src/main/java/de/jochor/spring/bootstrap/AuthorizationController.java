@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.Principal;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,16 @@ public class AuthorizationController {
 	private AuthorizationService authorizationService;
 
 	@RequestMapping(value = "/api/wunderlist-authorization", method = RequestMethod.GET)
-	public void authorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
+	public void requestAuthorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
+		String state = UUID.randomUUID().toString();
+		HttpSession session = req.getSession();
+		session.setAttribute("state", state);
+
+		// TODO implement
+	}
+
+	@RequestMapping(value = "/api/wunderlist-authorization", method = RequestMethod.GET)
+	public void wunderlistAuthorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
 		HttpSession session = req.getSession(false);
 
 		String state = req.getParameter("state");
