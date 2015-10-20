@@ -54,8 +54,8 @@ public class AuthorizationController {
 		res.sendRedirect(authorisationRequestURL);
 	}
 
-	@RequestMapping(value = "/api/wunderlist-authorization", method = RequestMethod.GET)
-	public void wunderlistAuthorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
+	@RequestMapping(value = "/api/receive-authorization", method = RequestMethod.GET)
+	public void receiveAuthorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
 		HttpSession session = req.getSession(false);
 
 		String state = req.getParameter("state");

@@ -2,6 +2,7 @@ package de.jochor.spring.bootstrap;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.env.Environment;
@@ -69,7 +72,30 @@ public class AuthorizationControllerTest {
 	}
 
 	@Test
-	public void testAuthorization() throws IOException {
+	public void testRequestAuthorization() throws IOException {
+		HttpSession session = Mockito.mock(HttpSession.class);
+
+		HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(req.getSession()).thenReturn(session);
+
+		HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+
+		authorizationController.requestAuthorization(req, res, USER);
+
+		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+		Mockito.verify(session).setAttribute(Matchers.eq("state"), argument.capture());
+		String state = argument.getValue();
+
+		String wunderlistRedirectTpl = env.getProperty("url.auth.wl.redirect.tpl");
+		String clientId = env.getProperty("wunderlist.client.id");
+		String callBack = URLEncoder.encode(env.getProperty("url.base") + env.getProperty("url.auth.wl.callback"), StandardCharsets.UTF_8.name());
+		String wunderlistRedirect = String.format(wunderlistRedirectTpl, clientId, callBack, state);
+
+		Mockito.verify(res).sendRedirect(wunderlistRedirect);
+	}
+
+	@Test
+	public void testReceiveAuthorization() throws IOException {
 		String code = "code retrieved via OAuth2";
 		String state = "unguessable random string";
 
@@ -89,12 +115,12 @@ public class AuthorizationControllerTest {
 		String homeDir = System.getProperty("user.home");
 		System.setProperty("user.home", testHomeDir.toString());
 		try {
-			authorizationController.wunderlistAuthorization(req, res, USER);
+			authorizationController.receiveAuthorization(req, res, USER);
 		} finally {
 			System.setProperty("user.home", homeDir);
 		}
 
-		String successRedirectAddress = env.getProperty("app.wunderlist.auth.success.redirect");
+		String successRedirectAddress = env.getProperty("url.home");
 		Assert.assertNotNull(successRedirectAddress);
 		Assert.assertFalse(successRedirectAddress.isEmpty());
 

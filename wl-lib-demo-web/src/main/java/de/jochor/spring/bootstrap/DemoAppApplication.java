@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.jochor.lib.wunderlist.service.AuthorizationService;
 import de.jochor.lib.wunderlist.service.AuthorizationServiceImpl;
+import de.jochor.lib.wunderlist.service.URIProvider;
 
 /**
  *
@@ -61,6 +64,9 @@ public class DemoAppApplication {
 		SpringApplication.run(DemoAppApplication.class, args);
 	}
 
+	@Inject
+	private URIProvider uriProvider;
+
 	@Bean
 	public AuthorizationController authorizationController() {
 		return new AuthorizationController();
@@ -68,7 +74,14 @@ public class DemoAppApplication {
 
 	@Bean
 	public AuthorizationService authorizationService() {
-		return new AuthorizationServiceImpl();
+		AuthorizationServiceImpl authorizationService = new AuthorizationServiceImpl();
+		authorizationService.setUriProvider(uriProvider);
+		return authorizationService;
+	}
+
+	@Bean
+	public URIProvider uriProvider() {
+		return new DemoURIProvider();
 	}
 
 	@RequestMapping("/user")
