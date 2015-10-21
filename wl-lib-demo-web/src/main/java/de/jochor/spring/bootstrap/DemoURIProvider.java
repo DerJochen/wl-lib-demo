@@ -24,18 +24,24 @@ public class DemoURIProvider implements URIProvider {
 	@Inject
 	private Environment env;
 
+	// TODO think: URIs can be moved to the lib project. just the callback depends on the application
+
 	@Override
-	public URI getRequestAuthorizationURI(String clientID, String callBack, String state) {
+	public URI getRequestAuthorizationURI(String clientID, String callback, String state) {
 		String requestAuthorizationTpl = env.getProperty("url.auth.wl.redirect.tpl");
-		String callBackEnc;
 		try {
-			callBackEnc = URLEncoder.encode(callBack, StandardCharsets.UTF_8.name());
+			String utf8 = StandardCharsets.UTF_8.name();
+			String clientIDEnc = URLEncoder.encode(clientID, utf8);
+			String callbackEnc = URLEncoder.encode(callback, utf8);
+			String stateEnc = URLEncoder.encode(state, utf8);
+
+			String requestAuthorization = String.format(requestAuthorizationTpl, clientIDEnc, callbackEnc, stateEnc);
+			URI requestAuthorizationURI = URI.create(requestAuthorization);
+
+			return requestAuthorizationURI;
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
-		String requestAuthorization = String.format(requestAuthorizationTpl, clientID, callBackEnc, state);
-		URI requestAuthorizationURI = URI.create(requestAuthorization);
-		return requestAuthorizationURI;
 	}
 
 	@Override

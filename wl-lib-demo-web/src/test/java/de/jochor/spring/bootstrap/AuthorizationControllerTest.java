@@ -84,11 +84,12 @@ public class AuthorizationControllerTest {
 
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		Mockito.verify(session).setAttribute(Matchers.eq("state"), argument.capture());
-		String state = argument.getValue();
 
 		String wunderlistRedirectTpl = env.getProperty("url.auth.wl.redirect.tpl");
-		String clientId = env.getProperty("wunderlist.client.id");
-		String callBack = URLEncoder.encode(env.getProperty("url.base") + env.getProperty("url.auth.wl.callback"), StandardCharsets.UTF_8.name());
+		String utf8 = StandardCharsets.UTF_8.name();
+		String clientId = URLEncoder.encode(env.getProperty("wunderlist.client.id"), utf8);
+		String callBack = URLEncoder.encode(env.getProperty("url.base") + env.getProperty("url.auth.wl.callback"), utf8);
+		String state = URLEncoder.encode(argument.getValue(), utf8);
 		String wunderlistRedirect = String.format(wunderlistRedirectTpl, clientId, callBack, state);
 
 		Mockito.verify(res).sendRedirect(wunderlistRedirect);
