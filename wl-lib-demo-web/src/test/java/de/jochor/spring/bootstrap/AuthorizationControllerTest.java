@@ -2,7 +2,7 @@ package de.jochor.spring.bootstrap;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URLEncoder;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +30,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import de.jochor.lib.http4j.junit.HTTPClientJUnit;
+import de.jochor.lib.wunderlist.service.DefaultURIProvider;
+import de.jochor.lib.wunderlist.service.URIProvider;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DemoAppApplication.class)
@@ -85,14 +87,13 @@ public class AuthorizationControllerTest {
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		Mockito.verify(session).setAttribute(Matchers.eq("state"), argument.capture());
 
-		String wunderlistRedirectTpl = env.getProperty("url.auth.wl.redirect.tpl");
-		String utf8 = StandardCharsets.UTF_8.name();
-		String clientId = URLEncoder.encode(env.getProperty("wunderlist.client.id"), utf8);
-		String callBack = URLEncoder.encode(env.getProperty("url.base") + env.getProperty("url.auth.wl.callback"), utf8);
-		String state = URLEncoder.encode(argument.getValue(), utf8);
-		String wunderlistRedirect = String.format(wunderlistRedirectTpl, clientId, callBack, state);
+		URIProvider uriProvider = new DefaultURIProvider();
+		String clientID = env.getProperty("wunderlist.client.id");
+		String callback = env.getProperty("url.base") + env.getProperty("url.auth.callback");
+		String state = argument.getValue();
+		URI wunderlistRedirectURI = uriProvider.getRequestAuthorizationURI(clientID, callback, state);
 
-		Mockito.verify(res).sendRedirect(wunderlistRedirect);
+		Mockito.verify(res).sendRedirect(wunderlistRedirectURI.toString());
 	}
 
 	@Test

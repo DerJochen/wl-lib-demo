@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.jochor.lib.wunderlist.service.AuthorizationService;
-import de.jochor.lib.wunderlist.service.URIProvider;
 
 /**
  *
@@ -44,9 +43,6 @@ public class AuthorizationController {
 	@Inject
 	private AuthorizationService authorizationService;
 
-	@Inject
-	private URIProvider uriProvider;
-
 	@RequestMapping(value = "/api/request-authorization", method = RequestMethod.GET)
 	public void requestAuthorization(HttpServletRequest req, HttpServletResponse res, Principal user) throws IOException {
 		String state = UUID.randomUUID().toString();
@@ -54,7 +50,7 @@ public class AuthorizationController {
 		session.setAttribute("state", state);
 
 		String clientID = env.getProperty("wunderlist.client.id");
-		String callback = uriProvider.getWunderlistCallBackURI().toString();
+		String callback = env.getProperty("url.base") + env.getProperty("url.auth.callback");
 		URI authorisationRequestURI = authorizationService.buildAuthorisationRequestURI(clientID, callback, state);
 		res.sendRedirect(authorisationRequestURI.toString());
 	}
