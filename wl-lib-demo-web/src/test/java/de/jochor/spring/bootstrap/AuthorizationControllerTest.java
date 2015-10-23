@@ -91,7 +91,7 @@ public class AuthorizationControllerTest {
 		String clientID = env.getProperty("wunderlist.client.id");
 		String callback = env.getProperty("url.base") + env.getProperty("url.auth.callback");
 		String state = argument.getValue();
-		URI wunderlistRedirectURI = uriProvider.getRequestAuthorizationURI(clientID, callback, state);
+		URI wunderlistRedirectURI = uriProvider.getAuthorizationRequestURI(clientID, callback, state);
 
 		Mockito.verify(res).sendRedirect(wunderlistRedirectURI.toString());
 	}
