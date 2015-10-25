@@ -62,6 +62,7 @@
 		<dependency>
 			<groupId>de.jochor.lib.http</groupId>
 			<artifactId>http4j-junit</artifactId>
+			<!-- <artifactId>http4j-apache</artifactId> -->
 			<version>${version.http4j-junit}</version>
 			<!-- Type T -->
 			<scope>test</scope>
