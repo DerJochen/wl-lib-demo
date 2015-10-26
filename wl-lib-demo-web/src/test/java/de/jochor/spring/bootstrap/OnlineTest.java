@@ -1,5 +1,7 @@
 package de.jochor.spring.bootstrap;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import org.junit.Before;
@@ -12,8 +14,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import de.jochor.lib.wunderlist.model.Authorization;
+import de.jochor.lib.wunderlist.model.RetrieveListPositionsResponse;
 import de.jochor.lib.wunderlist.model.RetrieveListResponse;
+import de.jochor.lib.wunderlist.model.Task;
 import de.jochor.lib.wunderlist.service.ListService;
+import de.jochor.lib.wunderlist.service.PositionsService;
+import de.jochor.lib.wunderlist.service.TaskService;
 
 /**
  *
@@ -35,7 +41,17 @@ public class OnlineTest {
 	@Inject
 	private ListService listService;
 
+	@Inject
+	private PositionsService positionsService;
+
+	@Inject
+	private TaskService taskService;
+
 	private Authorization authorization;
+
+	private String title = "Testing";
+
+	private int listID = 182730956;
 
 	@Before
 	public void setUp() {
@@ -48,8 +64,6 @@ public class OnlineTest {
 	@Test
 	public void testRetrieveAllLists() {
 		RetrieveListResponse[] allLists = listService.retrieveAll(authorization);
-
-		String title = "Testing";
 
 		System.out.println("There are " + allLists.length + " lists.");
 		System.out.println("Looking for the list '" + title + "'...");
@@ -68,7 +82,29 @@ public class OnlineTest {
 	@Ignore
 	@Test
 	public void testRetrieveListContent() {
-		int listID = 182730956;
+
+		Task[] tasks = taskService.retrieveAll(listID, authorization);
+		RetrieveListPositionsResponse listPositions = positionsService.retrieve(listID, authorization);
+
+		HashMap<Integer, Task> idToTaskMap = toMap(tasks);
+		int[] tasksIDs = listPositions.getValues();
+
+		System.out.println("Tasks of list '" + title + "' in order:");
+		for (int id : tasksIDs) {
+			Task task = idToTaskMap.get(Integer.valueOf(id));
+			System.out.println(id + " - " + task.getTitle());
+		}
+	}
+
+	private HashMap<Integer, Task> toMap(Task[] tasks) {
+		HashMap<Integer, Task> idToTaskMap = new HashMap<Integer, Task>();
+
+		for (Task task : tasks) {
+			Integer id = Integer.valueOf(task.getId());
+			idToTaskMap.put(id, task);
+		}
+
+		return idToTaskMap;
 	}
 
 }

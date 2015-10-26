@@ -24,6 +24,8 @@ import de.jochor.lib.wunderlist.service.AuthorizationService;
 import de.jochor.lib.wunderlist.service.AuthorizationServiceImpl;
 import de.jochor.lib.wunderlist.service.ListService;
 import de.jochor.lib.wunderlist.service.ListServiceImpl;
+import de.jochor.lib.wunderlist.service.PositionsService;
+import de.jochor.lib.wunderlist.service.PositionsServiceImpl;
 
 /**
  *
@@ -46,10 +48,10 @@ public class DemoAppApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.httpBasic().and() //
-			.authorizeRequests().antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll() //
-			.anyRequest().authenticated().and() //
-			.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class) //
-			.csrf().csrfTokenRepository(csrfTokenRepository());
+					.authorizeRequests().antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll() //
+					.anyRequest().authenticated().and() //
+					.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class) //
+					.csrf().csrfTokenRepository(csrfTokenRepository());
 		}
 
 		private CsrfTokenRepository csrfTokenRepository() {
@@ -76,6 +78,11 @@ public class DemoAppApplication {
 	@Bean
 	public ListService listService() {
 		return new ListServiceImpl();
+	}
+
+	@Bean
+	public PositionsService positionsService() {
+		return new PositionsServiceImpl();
 	}
 
 	@RequestMapping("/user")
