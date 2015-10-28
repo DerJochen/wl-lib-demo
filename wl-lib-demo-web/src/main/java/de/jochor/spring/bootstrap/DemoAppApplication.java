@@ -20,11 +20,11 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.jochor.lib.wunderlist.service.AuthorizationService;
+import de.jochor.lib.wunderlist.api.AuthorizationService;
+import de.jochor.lib.wunderlist.api.ListService;
+import de.jochor.lib.wunderlist.api.PositionsService;
 import de.jochor.lib.wunderlist.service.AuthorizationServiceImpl;
-import de.jochor.lib.wunderlist.service.ListService;
 import de.jochor.lib.wunderlist.service.ListServiceImpl;
-import de.jochor.lib.wunderlist.service.PositionsService;
 import de.jochor.lib.wunderlist.service.PositionsServiceImpl;
 
 /**

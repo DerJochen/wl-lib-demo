@@ -13,13 +13,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import de.jochor.lib.wunderlist.api.ListService;
+import de.jochor.lib.wunderlist.api.PositionsService;
+import de.jochor.lib.wunderlist.api.TaskService;
 import de.jochor.lib.wunderlist.model.Authorization;
-import de.jochor.lib.wunderlist.model.RetrieveListPositionsResponse;
-import de.jochor.lib.wunderlist.model.RetrieveListResponse;
+import de.jochor.lib.wunderlist.model.Positions;
+import de.jochor.lib.wunderlist.model.List;
 import de.jochor.lib.wunderlist.model.Task;
-import de.jochor.lib.wunderlist.service.ListService;
-import de.jochor.lib.wunderlist.service.PositionsService;
-import de.jochor.lib.wunderlist.service.TaskService;
 
 /**
  *
@@ -63,13 +63,13 @@ public class OnlineTest {
 	@Ignore
 	@Test
 	public void testRetrieveAllLists() {
-		RetrieveListResponse[] allLists = listService.retrieveAll(authorization);
+		List[] allLists = listService.retrieveAll(authorization);
 
 		System.out.println("There are " + allLists.length + " lists.");
 		System.out.println("Looking for the list '" + title + "'...");
 
-		RetrieveListResponse testList = null;
-		for (RetrieveListResponse item : allLists) {
+		List testList = null;
+		for (List item : allLists) {
 			if (title.equals(item.getTitle())) {
 				testList = item;
 				break;
@@ -84,14 +84,14 @@ public class OnlineTest {
 	public void testRetrieveListContent() {
 
 		Task[] tasks = taskService.retrieveAll(listID, authorization);
-		RetrieveListPositionsResponse listPositions = positionsService.retrieve(listID, authorization);
+		Positions listPositions = positionsService.retrieve(listID, authorization);
 
 		HashMap<Integer, Task> idToTaskMap = toMap(tasks);
 		int[] tasksIDs = listPositions.getValues();
 
 		System.out.println("Tasks of list '" + title + "' in order:");
 		for (int id : tasksIDs) {
-			Task task = idToTaskMap.get(Integer.valueOf(id));
+			Task task = idToTaskMap.get(id);
 			System.out.println(id + " - " + task.getTitle());
 		}
 	}
@@ -100,8 +100,7 @@ public class OnlineTest {
 		HashMap<Integer, Task> idToTaskMap = new HashMap<Integer, Task>();
 
 		for (Task task : tasks) {
-			Integer id = Integer.valueOf(task.getId());
-			idToTaskMap.put(id, task);
+			idToTaskMap.put(task.getId(), task);
 		}
 
 		return idToTaskMap;

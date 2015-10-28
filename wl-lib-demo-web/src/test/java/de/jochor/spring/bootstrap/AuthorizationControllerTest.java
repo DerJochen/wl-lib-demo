@@ -200,9 +200,7 @@ public class AuthorizationControllerTest {
 	}
 
 	private void setUpGetAccessToken(String code, String accessToken) {
-		String clientId = env.getProperty("wunderlist.client.id");
-		String clientSecrete = env.getProperty("wunderlist.client.secrete");
-		HTTPClientJUnit.addResponse("{\"access_token\":\"" + accessToken + "\"}", "clientId=" + clientId, "clientSecrete=" + clientSecrete, "code=" + code);
+		HTTPClientJUnit.addResponse("{\"access_token\":\"" + accessToken + "\"}");
 	}
 
 	private void verifyAccessTokenIsStored(Principal user, String accessToken) throws IOException {
