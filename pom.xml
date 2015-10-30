@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Demo App</name>
+	<name>Demo App Parent</name>
 	<description>Demo project for Wunderlist with Spring Boot</description>
 
 	<parent>
@@ -25,11 +25,11 @@
 
 	<properties>
 		<version.spring.boot>1.2.6.RELEASE</version.spring.boot>
-		<version.http4j-apache>0.2.1-SNAPSHOT</version.http4j-apache>
+		<version.http4j-apache>0.2.2-SNAPSHOT</version.http4j-apache>
 		<version.json4j-jackson>0.2.1</version.json4j-jackson>
 
 		<version.junit>4.12</version.junit>
-		<version.http4j-junit>0.2.1-SNAPSHOT</version.http4j-junit>
+		<version.http4j-junit>0.2.2-SNAPSHOT</version.http4j-junit>
 
 		<java.version>1.8</java.version>
 	</properties>

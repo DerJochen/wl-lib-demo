@@ -84,10 +84,15 @@ public class OnlineTest {
 	public void testRetrieveListContent() {
 
 		Task[] tasks = taskService.retrieveAll(listID, authorization);
-		Positions listPositions = positionsService.retrieve(listID, authorization);
+		Positions[] positionsArray = positionsService.retrieveAllTaskPositions(listID, authorization);
+
+		if (positionsArray == null || positionsArray.length != 1)
+			throw new IllegalStateException();
+
+		Positions positions = positionsArray[0];
 
 		HashMap<Integer, Task> idToTaskMap = toMap(tasks);
-		int[] tasksIDs = listPositions.getValues();
+		int[] tasksIDs = positions.getValues();
 
 		System.out.println("Tasks of list '" + title + "' in order:");
 		for (int id : tasksIDs) {

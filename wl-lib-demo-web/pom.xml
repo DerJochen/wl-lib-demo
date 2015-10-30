@@ -5,7 +5,7 @@
 
 	<artifactId>wl-lib-demo-web</artifactId>
 
-	<name>Demo App</name>
+	<name>Demo App Web</name>
 	<description>Demo project for Wunderlist with Spring Boot</description>
 
 	<parent>
