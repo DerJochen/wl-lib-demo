@@ -2,6 +2,19 @@
 <div ng-show="authenticated">
 	<p>The ID is {{greeting.id}}</p>
 	<p>The content is {{greeting.content}}</p>
+	<div>
+		<select size="{{allLists.size}}">
+			<!-- TODO on select change selected list and that changes listTasks -->
+			<option ng-repeat="list in allLists" value="{{list.id}}">{{list.title}}</option>
+		</select>
+	</div>
+	<div>
+		<select size="{{listTasks.size}}">
+			<!-- TODO on select change selected task for position change -->
+			<option ng-repeat="task in listTasks">{{task.title}}</option>
+		</select>
+		<button>Save positions</button>
+	</div>
 </div>
 <div ng-show="!authenticated">
 	<p>Login to see your greeting</p>
