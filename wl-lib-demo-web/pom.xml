@@ -20,19 +20,6 @@
 			<artifactId>java-lib-for-wunderlist</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>de.jochor.lib.http</groupId>
-			<artifactId>http4j-apache</artifactId>
-			<version>${version.http4j-junit}</version>
-			<!-- Type T -->
-		</dependency>
-		<dependency>
-			<groupId>de.jochor.lib.json</groupId>
-			<artifactId>json4j-jackson</artifactId>
-			<version>${version.json4j-jackson}</version>
-			<!-- Type T -->
-		</dependency>
-
 		<!-- Get the dependencies of a secured web application -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -77,6 +64,13 @@
 			<artifactId>http4j-junit</artifactId>
 			<!-- <artifactId>http4j-apache</artifactId> -->
 			<version>${version.http4j-junit}</version>
+			<!-- Type T -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.jochor.lib.json</groupId>
+			<artifactId>json4j-jackson</artifactId>
+			<version>${version.json4j-jackson}</version>
 			<!-- Type T -->
 			<scope>test</scope>
 		</dependency>
