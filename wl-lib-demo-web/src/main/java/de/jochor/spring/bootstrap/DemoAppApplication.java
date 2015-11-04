@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.Servlet;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -48,10 +50,10 @@ public class DemoAppApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.httpBasic().and() //
-					.authorizeRequests().antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll() //
-					.anyRequest().authenticated().and() //
-					.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class) //
-					.csrf().csrfTokenRepository(csrfTokenRepository());
+			.authorizeRequests().antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll() //
+			.anyRequest().authenticated().and() //
+			.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class) //
+			.csrf().csrfTokenRepository(csrfTokenRepository());
 		}
 
 		private CsrfTokenRepository csrfTokenRepository() {
@@ -63,6 +65,11 @@ public class DemoAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoAppApplication.class, args);
+	}
+
+	@Bean(name = "demo")
+	public Servlet demoServlet() {
+		return new DemoServlet();
 	}
 
 	@Bean
