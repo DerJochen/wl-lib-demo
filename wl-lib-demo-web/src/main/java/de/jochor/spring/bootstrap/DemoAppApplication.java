@@ -25,9 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import de.jochor.lib.wunderlist.api.AuthorizationService;
 import de.jochor.lib.wunderlist.api.ListService;
 import de.jochor.lib.wunderlist.api.PositionsService;
+import de.jochor.lib.wunderlist.api.TaskService;
 import de.jochor.lib.wunderlist.service.AuthorizationServiceImpl;
 import de.jochor.lib.wunderlist.service.ListServiceImpl;
 import de.jochor.lib.wunderlist.service.PositionsServiceImpl;
+import de.jochor.lib.wunderlist.service.TaskServiceImpl;
 
 /**
  *
@@ -85,6 +87,11 @@ public class DemoAppApplication {
 	@Bean
 	public ListService listService() {
 		return new ListServiceImpl();
+	}
+
+	@Bean
+	public TaskService taskService() {
+		return new TaskServiceImpl();
 	}
 
 	@Bean

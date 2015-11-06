@@ -24,10 +24,11 @@
 	</modules>
 
 	<properties>
-		<version.wl-lib>0.1.0</version.wl-lib>
+		<version.wl-lib>0.2.0-SNAPSHOT</version.wl-lib>
 		<version.spring.boot>1.2.6.RELEASE</version.spring.boot>
 		<version.http4j-apache>0.2.2</version.http4j-apache>
 		<version.json4j-jackson>0.2.1</version.json4j-jackson>
+		<version.lombok>1.16.4</version.lombok>
 
 		<version.junit>4.12</version.junit>
 		<version.http4j-junit>0.2.2</version.http4j-junit>
@@ -36,6 +37,20 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>de.jochor.lib.http</groupId>
+			<artifactId>http4j-apache</artifactId>
+			<version>${version.http4j-apache}</version>
+			<!-- Type T -->
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.jochor.lib.json</groupId>
+			<artifactId>json4j-jackson</artifactId>
+			<version>${version.json4j-jackson}</version>
+			<!-- Type T -->
+		</dependency>
+	
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
