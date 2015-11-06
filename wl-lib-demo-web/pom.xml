@@ -33,6 +33,14 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${version.lombok}</version>
+			<!-- Type 0 -->
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
@@ -64,13 +72,6 @@
 			<artifactId>http4j-junit</artifactId>
 			<!-- <artifactId>http4j-apache</artifactId> -->
 			<version>${version.http4j-junit}</version>
-			<!-- Type T -->
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.jochor.lib.json</groupId>
-			<artifactId>json4j-jackson</artifactId>
-			<version>${version.json4j-jackson}</version>
 			<!-- Type T -->
 			<scope>test</scope>
 		</dependency>

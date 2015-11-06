@@ -14,30 +14,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<properties>
-		<version.http4j-apache>0.2.2</version.http4j-apache>
-		<version.json4j-jackson>0.2.1</version.json4j-jackson>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>de.jochor.wunderlist</groupId>
 			<artifactId>wl-lib-demo-web</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>de.jochor.lib.http</groupId>
-			<artifactId>http4j-apache</artifactId>
-			<version>${version.http4j-apache}</version>
-			<!-- Type T -->
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.jochor.lib.json</groupId>
-			<artifactId>json4j-jackson</artifactId>
-			<version>${version.json4j-jackson}</version>
-			<!-- Type T -->
-			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
