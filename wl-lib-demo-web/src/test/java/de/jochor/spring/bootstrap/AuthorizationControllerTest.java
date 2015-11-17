@@ -29,7 +29,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import de.jochor.lib.http4j.StaticHTTPClientBinder;
 import de.jochor.lib.http4j.junit.HTTPClientJUnit;
+import de.jochor.lib.servicefactory.ServiceFactory;
 import de.jochor.lib.wunderlist.service.DefaultURIProvider;
 import de.jochor.lib.wunderlist.service.URIProvider;
 
@@ -39,6 +41,11 @@ import de.jochor.lib.wunderlist.service.URIProvider;
 public class AuthorizationControllerTest {
 
 	private static Principal USER;
+
+	static {
+		// Explicitly selecting the jUnit implementation of the HTTPClient.
+		System.setProperty(ServiceFactory.PROPERTIES_BASE + StaticHTTPClientBinder.class.getName(), HTTPClientJUnit.class.getName());
+	}
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

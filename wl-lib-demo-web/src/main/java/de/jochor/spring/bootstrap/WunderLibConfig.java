@@ -15,6 +15,7 @@ import de.jochor.lib.wunderlist.service.TaskServiceImpl;
 import de.jochor.lib.wunderlist.service.WebhookServiceImpl;
 
 /**
+ * Spring configuration class for the Wunderlist services.
  *
  * <p>
  * <b>Started:</b> 2015-11-06
