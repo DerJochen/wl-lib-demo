@@ -31,6 +31,21 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<!-- Type T -->
 		</dependency>
+		
+		<dependency>
+			<groupId>de.jochor.lib.http</groupId>
+			<artifactId>http4j-apache</artifactId>
+			<version>${version.http4j-apache}</version>
+			<!-- Type T -->
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.jochor.lib.json</groupId>
+			<artifactId>json4j-jackson</artifactId>
+			<version>${version.json4j-jackson}</version>
+			<!-- Type T -->
+		</dependency>
+	
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -70,7 +85,6 @@
 		<dependency>
 			<groupId>de.jochor.lib.http</groupId>
 			<artifactId>http4j-junit</artifactId>
-			<!-- <artifactId>http4j-apache</artifactId> -->
 			<version>${version.http4j-junit}</version>
 			<!-- Type T -->
 			<scope>test</scope>
