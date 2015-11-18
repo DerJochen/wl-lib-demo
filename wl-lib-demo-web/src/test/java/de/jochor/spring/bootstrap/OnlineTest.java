@@ -17,8 +17,8 @@ import de.jochor.lib.wunderlist.api.ListService;
 import de.jochor.lib.wunderlist.api.PositionsService;
 import de.jochor.lib.wunderlist.api.TaskService;
 import de.jochor.lib.wunderlist.model.Authorization;
-import de.jochor.lib.wunderlist.model.Positions;
 import de.jochor.lib.wunderlist.model.List;
+import de.jochor.lib.wunderlist.model.Positions;
 import de.jochor.lib.wunderlist.model.Task;
 
 /**
@@ -82,12 +82,11 @@ public class OnlineTest {
 	@Ignore
 	@Test
 	public void testRetrieveListContent() {
-
 		Task[] tasks = taskService.retrieveAll(listID, authorization);
 		Positions[] positionsArray = positionsService.retrieveAllTaskPositions(listID, authorization);
-
-		if (positionsArray == null || positionsArray.length != 1)
+		if (positionsArray == null || positionsArray.length != 1) {
 			throw new IllegalStateException();
+		}
 
 		Positions positions = positionsArray[0];
 
@@ -99,6 +98,30 @@ public class OnlineTest {
 			Task task = idToTaskMap.get(id);
 			System.out.println(id + " - " + task.getTitle());
 		}
+	}
+
+	@Ignore
+	@Test
+	public void testShuffelListContent() {
+		Positions[] positionsArray = positionsService.retrieveAllTaskPositions(listID, authorization);
+		if (positionsArray == null || positionsArray.length != 1) {
+			throw new IllegalStateException();
+		}
+		Positions positions = positionsArray[0];
+
+		int[] tasksIDs = positions.getValues();
+
+		for (int i = 0; i < tasksIDs.length; i++) {
+			int id = tasksIDs[i++];
+			if (i == tasksIDs.length) {
+				break;
+			}
+
+			tasksIDs[i - 1] = tasksIDs[i];
+			tasksIDs[i] = id;
+		}
+
+		positionsService.updateTaskPositions(positions.getId(), tasksIDs, positions.getRevision(), authorization);
 	}
 
 	private HashMap<Integer, Task> toMap(Task[] tasks) {
