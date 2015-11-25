@@ -71,6 +71,7 @@ public class AuthorizationController {
 		try {
 			storeAccessToken(user, accessToken);
 		} catch (IOException e) {
+			// TODO log the error
 			res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return;
 		}

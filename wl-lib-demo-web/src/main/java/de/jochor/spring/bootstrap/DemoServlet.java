@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.core.env.Environment;
 
@@ -30,37 +32,49 @@ public class DemoServlet extends HttpServlet {
 	private static final long serialVersionUID = 3641115279664025510L;
 
 	@Inject
-	private Environment env;
+	private transient Environment env;
 
 	@Inject
-	private ListService listService;
+	private transient ListService listService;
 
 	@Inject
-	private TaskService taskService;
+	private transient TaskService taskService;
 
 	@Inject
-	private PositionsService positionsService;
+	private transient PositionsService positionsService;
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException {
 		res.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		res.setContentType("text/html");
 
-		Authorization authorization = getAuthorization(req);
+		Optional<Authorization> authorizationOpt = getAuthorization(req);
+		if (!authorizationOpt.isPresent()) {
+			// TODO redirect to login page
+		}
+		Authorization authorization = authorizationOpt.get();
 
 		String lString = req.getParameter("l");
 		String tString = req.getParameter("t");
 
-		int selectedListId = lString == null ? 0 : Integer.parseInt(lString);
-		int selectedTaskId = tString == null ? 0 : Integer.parseInt(tString);
-
 		try (OutputStream out = res.getOutputStream()) {
+			int selectedListId = lString == null ? 0 : Integer.parseInt(lString);
+			int selectedTaskId = tString == null ? 0 : Integer.parseInt(tString);
+
 			String pageHTML = renderHTML(selectedListId, selectedTaskId, authorization);
 			out.write(pageHTML.getBytes(StandardCharsets.UTF_8));
+		} catch (IOException | NumberFormatException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
-	private Authorization getAuthorization(HttpServletRequest req) {
+	private Optional<Authorization> getAuthorization(HttpServletRequest req) {
+		HttpSession session = req.getSession(false);
+		if (session == null) {
+			return Optional.empty();
+		}
+
 		String clientID = env.getProperty("wunderlist.client.id");
 		String accessToken = env.getProperty("wunderlist.my.accesstoken");
 
@@ -69,7 +83,7 @@ public class DemoServlet extends HttpServlet {
 		authorization.setClientId(clientID);
 		authorization.setUserToken(accessToken);
 
-		return authorization;
+		return Optional.of(authorization);
 	}
 
 	private String renderHTML(int selectedListId, int selectedTaskId, Authorization authorization) {
