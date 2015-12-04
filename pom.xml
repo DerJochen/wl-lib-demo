@@ -26,12 +26,12 @@
 	<properties>
 		<version.wl-lib>0.2.0-SNAPSHOT</version.wl-lib>
 		<version.spring.boot>1.2.6.RELEASE</version.spring.boot>
-		<version.http4j-apache>0.3.1</version.http4j-apache>
-		<version.json4j-jackson>0.3.1</version.json4j-jackson>
+		<version.http4j-apache>0.3.2</version.http4j-apache>
+		<version.json4j-jackson>0.3.2</version.json4j-jackson>
 		<version.lombok>1.16.4</version.lombok>
 
 		<version.junit>4.12</version.junit>
-		<version.http4j-junit>0.3.1</version.http4j-junit>
+		<version.http4j-junit>0.3.2</version.http4j-junit>
 
 		<java.version>1.8</java.version>
 	</properties>
