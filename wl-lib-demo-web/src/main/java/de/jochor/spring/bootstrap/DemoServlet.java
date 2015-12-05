@@ -1,6 +1,5 @@
 package de.jochor.spring.bootstrap;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -63,7 +62,8 @@ public class DemoServlet extends HttpServlet {
 
 			String pageHTML = renderHTML(selectedListId, selectedTaskId, authorization);
 			out.write(pageHTML.getBytes(StandardCharsets.UTF_8));
-		} catch (IOException | NumberFormatException e) {
+		} catch (Exception e) {
+			// TODO Log
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
