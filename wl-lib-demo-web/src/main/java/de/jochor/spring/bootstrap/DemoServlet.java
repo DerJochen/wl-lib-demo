@@ -1,6 +1,7 @@
 package de.jochor.spring.bootstrap;
 
-import java.io.OutputStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
 import de.jochor.lib.wunderlist.api.ListService;
@@ -30,6 +33,8 @@ public class DemoServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 3641115279664025510L;
 
+	private static final Logger logger = LoggerFactory.getLogger(DemoServlet.class);
+
 	@Inject
 	private transient Environment env;
 
@@ -43,7 +48,7 @@ public class DemoServlet extends HttpServlet {
 	private transient PositionsService positionsService;
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		res.setContentType("text/html");
 
@@ -56,16 +61,15 @@ public class DemoServlet extends HttpServlet {
 		String lString = req.getParameter("l");
 		String tString = req.getParameter("t");
 
-		try (OutputStream out = res.getOutputStream()) {
+		try (Writer writer = res.getWriter()) {
 			int selectedListId = lString == null ? 0 : Integer.parseInt(lString);
 			int selectedTaskId = tString == null ? 0 : Integer.parseInt(tString);
 
 			String pageHTML = renderHTML(selectedListId, selectedTaskId, authorization);
-			out.write(pageHTML.getBytes(StandardCharsets.UTF_8));
+			writer.append(pageHTML);
 		} catch (Exception e) {
-			// TODO Log
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			logger.error("Exception durin request", e);
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
