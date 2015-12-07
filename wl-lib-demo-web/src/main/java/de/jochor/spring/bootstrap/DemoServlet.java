@@ -28,12 +28,27 @@ import de.jochor.lib.wunderlist.model.Task;
 import de.jochor.lib.wunderlist.service.ListComparator;
 import de.jochor.lib.wunderlist.service.TaskComparator;
 
-@WebServlet("demo")
+@WebServlet({ "demo", "login" })
 public class DemoServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 3641115279664025510L;
 
 	private static final Logger logger = LoggerFactory.getLogger(DemoServlet.class);
+
+	private static final String LOGIN_HTML = "<div>" //
+			+ "<span><label for=\"username\">Username: </span><input type=\"text\" id=\"username\" /><span>" //
+			+ "<label for=\"password\">Password: </span><input type=\"password\" id=\"password\" />" //
+			+ "</div>";
+
+	private static final String pageHTML = "<html><head><title>Demo App</title></head><body><h2>Lists</h2>%s<h2>Tasks</h2>%s</body></html>";
+
+	private static final String listsHTML = "<div>%s</div>";
+
+	private static final String listHTML = "<div><a href=\"?l=%d\">%s</a></div>";
+
+	private static final String tasksHTML = "<div>%s</div>";
+
+	private static final String taskHTML = "<div><a href=\"?l=%d&t=%d\">%s</a></div>";
 
 	@Inject
 	private transient Environment env;
@@ -54,7 +69,7 @@ public class DemoServlet extends HttpServlet {
 
 		Optional<Authorization> authorizationOpt = getAuthorization(req);
 		if (!authorizationOpt.isPresent()) {
-			// TODO redirect to login page
+			renderLoginHTML(res);
 		}
 		Authorization authorization = authorizationOpt.get();
 
@@ -68,6 +83,15 @@ public class DemoServlet extends HttpServlet {
 			String pageHTML = renderHTML(selectedListId, selectedTaskId, authorization);
 			writer.append(pageHTML);
 		} catch (Exception e) {
+			logger.error("Exception durin request", e);
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private void renderLoginHTML(HttpServletResponse res) throws IOException {
+		try (Writer writer = res.getWriter()) {
+			writer.write(LOGIN_HTML);
+		} catch (IOException e) {
 			logger.error("Exception durin request", e);
 			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -136,15 +160,5 @@ public class DemoServlet extends HttpServlet {
 		String listsHTML = String.format(DemoServlet.tasksHTML, sb.toString());
 		return listsHTML;
 	}
-
-	private static final String pageHTML = "<html><head><title>Demo App</title></head><body><h2>Lists</h2>%s<h2>Tasks</h2>%s</body></html>";
-
-	private static final String listsHTML = "<div>%s</div>";
-
-	private static final String listHTML = "<div><a href=\"?l=%d\">%s</a></div>";
-
-	private static final String tasksHTML = "<div>%s</div>";
-
-	private static final String taskHTML = "<div><a href=\"?l=%d&t=%d\">%s</a></div>";
 
 }
