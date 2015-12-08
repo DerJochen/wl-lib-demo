@@ -36,8 +36,10 @@ public class DemoServlet extends HttpServlet {
 	private static final Logger logger = LoggerFactory.getLogger(DemoServlet.class);
 
 	private static final String LOGIN_HTML = "<div>" //
-			+ "<span><label for=\"username\">Username: </span><input type=\"text\" id=\"username\" /><span>" //
-			+ "<label for=\"password\">Password: </span><input type=\"password\" id=\"password\" />" //
+			+ "<form method=\"POST\">" //
+			+ "<span><label for=\"username\">Username: </span><input type=\"text\" id=\"username\" name=\"username\" /><span>" //
+			+ "<label for=\"password\">Password: </span><input type=\"password\" id=\"password\" name=\"password\" />" //
+			+ "</form>" //
 			+ "</div>";
 
 	private static final String pageHTML = "<html><head><title>Demo App</title></head><body><h2>Lists</h2>%s<h2>Tasks</h2>%s</body></html>";
@@ -70,6 +72,7 @@ public class DemoServlet extends HttpServlet {
 		Optional<Authorization> authorizationOpt = getAuthorization(req);
 		if (!authorizationOpt.isPresent()) {
 			renderLoginHTML(res);
+			return;
 		}
 		Authorization authorization = authorizationOpt.get();
 
@@ -83,18 +86,39 @@ public class DemoServlet extends HttpServlet {
 			String pageHTML = renderHTML(selectedListId, selectedTaskId, authorization);
 			writer.append(pageHTML);
 		} catch (Exception e) {
-			logger.error("Exception durin request", e);
+			logger.error("Exception during request", e);
 			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	private void renderLoginHTML(HttpServletResponse res) throws IOException {
-		try (Writer writer = res.getWriter()) {
-			writer.write(LOGIN_HTML);
-		} catch (IOException e) {
-			logger.error("Exception durin request", e);
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		if (!session.isNew()) {
+			session.invalidate();
+			session = req.getSession();
 		}
+
+		String username = req.getParameter("username");
+		String password = req.getParameter("password");
+
+		String realPassword = env.getProperty("app.user." + username + ".password");
+		if (realPassword == null || !realPassword.equals(password)) {
+			renderLoginHTML(res);
+			return;
+		}
+
+		String clientID = env.getProperty("wunderlist.client.id");
+		String accessToken = env.getProperty("app.user." + username + ".wunderlist.accesstoken");
+
+		Authorization authorization = new Authorization();
+
+		authorization.setClientId(clientID);
+		authorization.setUserToken(accessToken);
+
+		session.setAttribute("authorization", authorization);
+		
+		res.sendRedirect(req.getServletPath());
 	}
 
 	private Optional<Authorization> getAuthorization(HttpServletRequest req) {
@@ -103,15 +127,23 @@ public class DemoServlet extends HttpServlet {
 			return Optional.empty();
 		}
 
-		String clientID = env.getProperty("wunderlist.client.id");
-		String accessToken = env.getProperty("wunderlist.my.accesstoken");
+		Object object = session.getAttribute("authorization");
+		if (object == null || !(object instanceof Authorization)) {
+			return Optional.empty();
+		}
 
-		Authorization authorization = new Authorization();
-
-		authorization.setClientId(clientID);
-		authorization.setUserToken(accessToken);
+		Authorization authorization = (Authorization) object;
 
 		return Optional.of(authorization);
+	}
+
+	private void renderLoginHTML(HttpServletResponse res) throws IOException {
+		try (Writer writer = res.getWriter()) {
+			writer.write(LOGIN_HTML);
+		} catch (IOException e) {
+			logger.error("Exception during request", e);
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	private String renderHTML(int selectedListId, int selectedTaskId, Authorization authorization) {
