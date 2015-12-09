@@ -18,8 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,8 @@ import de.jochor.lib.wunderlist.api.AuthorizationService;
  */
 @RestController
 public class AuthorizationController {
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
 	@Inject
 	private Environment env;
@@ -61,7 +64,7 @@ public class AuthorizationController {
 
 		String state = req.getParameter("state");
 		if (session == null || state == null || !state.equals(session.getAttribute("state"))) {
-			res.setStatus(HttpStatus.FORBIDDEN.value());
+			res.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
 
@@ -71,8 +74,8 @@ public class AuthorizationController {
 		try {
 			storeAccessToken(user, accessToken);
 		} catch (IOException e) {
-			// TODO log the error
-			res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			logger.error("Exception during request", e);
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return;
 		}
 
