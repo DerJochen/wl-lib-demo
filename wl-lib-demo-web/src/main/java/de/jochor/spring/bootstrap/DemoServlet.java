@@ -37,8 +37,8 @@ public class DemoServlet extends HttpServlet {
 
 	private static final String LOGIN_HTML = "<div>" //
 			+ "<form method=\"POST\">" //
-			+ "<span><label for=\"username\">Username: </span><input type=\"text\" id=\"username\" name=\"username\" /><span>" //
-			+ "<label for=\"password\">Password: </span><input type=\"password\" id=\"password\" name=\"password\" />" //
+			+ "<span><label for=\"username\">Username: </span><input type=\"text\" id=\"username\" name=\"username\" />" //
+			+ "<span><label for=\"password\">Password: </span><input type=\"password\" id=\"password\" name=\"password\" />" //
 			+ "</form>" //
 			+ "</div>";
 
@@ -117,7 +117,7 @@ public class DemoServlet extends HttpServlet {
 		authorization.setUserToken(accessToken);
 
 		session.setAttribute("authorization", authorization);
-		
+
 		res.sendRedirect(req.getServletPath());
 	}
 
