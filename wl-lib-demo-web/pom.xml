@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>wl-lib-demo-web</artifactId>
-	<packaging>war</packaging>
+	<!-- <packaging>war</packaging> -->
 
 	<name>Demo App Web</name>
 	<description>Demo project for Wunderlist with Spring Boot</description>
