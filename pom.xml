@@ -24,8 +24,8 @@
 	</modules>
 
 	<properties>
-		<version.wl-lib>0.2.0-SNAPSHOT</version.wl-lib>
-		<version.spring.boot>1.2.6.RELEASE</version.spring.boot>
+		<version.wl-lib>0.2.0</version.wl-lib>
+		<version.spring.boot>1.3.1.RELEASE</version.spring.boot>
 		<version.http4j-apache>0.3.2</version.http4j-apache>
 		<version.json4j-jackson>0.3.2</version.json4j-jackson>
 		<version.lombok>1.16.4</version.lombok>
